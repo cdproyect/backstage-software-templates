@@ -42,10 +42,10 @@ jobs:
       - name: Modify values file
         shell: bash
         run: |
-          echo ${{needs.ci.outputs.commit_id}}
+          echo ${{ '${{needs.ci.outputs.commit_id}}' }}
           sudo apt-get update && sudo apt-get install -y python3 python3-pip
           python3 -m pip install yq --break-system-packages
-          yq -Yi '.image.tag = "${{needs.ci.outputs.commit_id}}"' charts/${{ values.app_name }}/values-${{ values.app_env }}.yaml
+          yq -Yi '.image.tag = "${{ '${{needs.ci.outputs.commit_id}}' }}"' charts/${{ values.app_name }}/values-${{ values.app_env }}.yaml
         
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
@@ -66,5 +66,5 @@ jobs:
             --insecure \
             --grpc-web \
             --username admin \
-            --password ${{ secrets.ARGOCD_PASSWORD }}
+            --password ${{ '${{ secrets.ARGOCD_PASSWORD }}' }}
           argocd app sync ${{ values.app_name }}
