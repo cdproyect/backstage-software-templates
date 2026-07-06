@@ -1,0 +1,69 @@
+replicaCount: 1
+image:
+  repository: cdproyect/${{ values.app_name }}
+  pullPolicy: IfNotPresent
+  tag: ${{ values.app_name }}-${{ values.app_env }}-latest
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount:
+  create: true
+  automount: false
+  annotations: {}
+  name: ""
+  rbac:
+    create: false
+    rules: []
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 5001
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+httpRoute:
+  enabled: true
+  annotations: {}
+  parentRefs:
+    - name: gateway
+      namespace: istio-system
+  hostnames:
+    - ${{ values.app_name }}-${{ values.app_env }}.test.com
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+resources:
+  requests:
+    memory: 50m
+    cpu: 50M
+livenessProbe:
+  httpGet:
+    path: /api/v1/healthz
+    port: http
+readinessProbe:
+  httpGet:
+    path: /api/v1/healthz
+    port: http
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
