@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           push: true
-          tags: cdproyect-org/${{ values.app_name }}:${{ '${{ env.COMMIT_ID }}' }}
+          tags: cdproyect/${{ values.app_name }}:${{ '${{ env.COMMIT_ID }}' }}
     outputs:
       commit_id: ${{ '${{ env.COMMIT_ID }}' }}
   
