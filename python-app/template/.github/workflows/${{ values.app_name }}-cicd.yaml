@@ -34,7 +34,9 @@ jobs:
   
   cd:
     needs: ci
-    runs-on: self-hosted
+    runs-on:
+      group: Default
+      labels: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v3
