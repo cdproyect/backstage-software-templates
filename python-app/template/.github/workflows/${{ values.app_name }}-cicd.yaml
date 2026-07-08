@@ -5,7 +5,7 @@ on:
     paths:
       - src/**
     branches:
-      - master
+      - main
 permissions:
   contents: write  # Add this to allow pushing commits
 
