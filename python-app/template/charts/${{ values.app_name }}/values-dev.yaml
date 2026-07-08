@@ -1,5 +1,5 @@
 replicaCount: 1
 resources:
   requests:
-    memory: 40mi
+    memory: 40Mi
     cpu: 40m
