@@ -51,6 +51,7 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           message: "Updates values.yaml with commit id ${{ '${{needs.ci.outputs.commit_id}}' }}"
+          pull_strategy: '--ff-only'
       
       - name: Install argocd
         shell: bash
