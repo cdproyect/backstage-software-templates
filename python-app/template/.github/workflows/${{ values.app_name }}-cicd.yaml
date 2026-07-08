@@ -59,6 +59,30 @@ jobs:
           sudo curl -ksSL -o argocd argo-cd-argocd-server.argocd/download/argocd-linux-amd64
           sudo chmod +x argocd
           sudo mv ./argocd /usr/local/bin/argocd
+      
+      - name: Argocd repo add and app create
+        shell: bash
+        run: |
+          repo="https://github.com/cdproyect-org/${{ values.app_name }}.git"
+          argocd login argo-cd-argocd-server.argocd \
+            --plaintext \
+            --insecure \
+            --grpc-web \
+            --username admin \
+            --password ${{ '${{ secrets.ARGOCD_PASSWORD }}' }}
+          # Connects the argocd repo
+          argocd repo list | grep -q $repo || argocd repo add $repo
+          # Creates the argocd app
+          argocd app get ${{ values.app_name }} || argocd app create ${{ values.app_name }} \
+            --repo $repo \
+            --path charts/${{ values.app_name }} \
+            --dest-server https://kubernetes.default.svc \
+            --dest-namespace ${{ values.app_env }} \
+            --values values-${{ values.app_env }}.yaml \
+            --revision main \
+            --sync-policy manual \
+            --sync-option CreateNamespace=true 
+        
       - name: Argocd app sync
         shell: bash
         run: |
@@ -69,3 +93,4 @@ jobs:
             --username admin \
             --password ${{ '${{ secrets.ARGOCD_PASSWORD }}' }}
           argocd app sync ${{ values.app_name }}
+          argocd app wait $app_to_sync --timeout 180
